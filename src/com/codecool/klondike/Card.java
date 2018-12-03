@@ -24,7 +24,9 @@ public class Card extends ImageView {
     public static final int HEIGHT = 215;
 
     public Card(int suit, int rank, boolean faceDown) {
+        //suit is the color. 1 - hearts; 2 - cube; 3 - leaf; 4 - peak
         this.suit = suit;
+        // rank is the value of the card, J - 11, Q - 12; K = 13;
         this.rank = rank;
         this.faceDown = faceDown;
         this.dropShadow = new DropShadow(2, Color.gray(0, 0.75));
