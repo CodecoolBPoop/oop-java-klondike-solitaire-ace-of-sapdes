@@ -184,14 +184,19 @@ public class Game extends Pane {
 
     public void dealCards() {
         Iterator<Card> deckIterator = deck.iterator();
-        /*TODO - put the cards to the tableau (28pcs)
-          TODO - Turn upside the top cards
+        /*TODO - Turn upside the top cards
         */
-        for (int i = 0; i < 7; i++) {
-            Pile actualPile = tableauPiles.get(i);
-            for (int j = 0; j <i+1 ; j++) {
-                System.out.println(actualPile.getCards().toString());
-                actualPile.getCards().add(deck.get(j));
+        Card nextCard;
+        for (int tableauNumber = 0; tableauNumber < 7; tableauNumber++) {
+            Pile actualPile = tableauPiles.get(tableauNumber);
+            for (int cardNumber = 0; cardNumber < tableauNumber + 1 ; cardNumber++) {
+                nextCard = deckIterator.next();
+                if (cardNumber == tableauNumber) {
+                    nextCard.flip();
+                }
+                actualPile.addCard(nextCard);
+                addMouseEventHandlers(nextCard);
+                getChildren().add(nextCard);
             }
         }
 
