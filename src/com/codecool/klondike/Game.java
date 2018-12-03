@@ -184,10 +184,17 @@ public class Game extends Pane {
 
     public void dealCards() {
         Iterator<Card> deckIterator = deck.iterator();
-        /*TODO - Shuffle the pack
-          TODO - put the cards to the tableau (28pcs)
+        /*TODO - put the cards to the tableau (28pcs)
           TODO - Turn upside the top cards
         */
+        for (int i = 0; i < 7; i++) {
+            Pile actualPile = tableauPiles.get(i);
+            for (int j = 0; j <i+1 ; j++) {
+                System.out.println(actualPile.getCards().toString());
+                actualPile.getCards().add(deck.get(j));
+            }
+        }
+
 
         deckIterator.forEachRemaining(card -> {
             stockPile.addCard(card);
