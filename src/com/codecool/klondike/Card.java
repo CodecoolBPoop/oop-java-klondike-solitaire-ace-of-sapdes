@@ -81,7 +81,10 @@ public class Card extends ImageView {
 
     public static boolean isOppositeColor(Card card1, Card card2) {
         //TODO
-        return true;
+        if (isCardColorRed(card1) != isCardColorRed(card2)) {
+            return true;
+        }
+        return false;
     }
 
     public static boolean isSameSuit(Card card1, Card card2) {
@@ -123,6 +126,13 @@ public class Card extends ImageView {
                 cardFaceImages.put(cardId, new Image(imageFileName));
             }
         }
+    }
+
+    private static boolean isCardColorRed(Card card) {
+        if (card.getSuit() == 1 || card.getSuit() == 2) {
+            return true;
+        }
+        return false;
     }
 
 }

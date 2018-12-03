@@ -14,6 +14,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -94,6 +95,7 @@ public class Game extends Pane {
 
     public Game() {
         deck = Card.createNewDeck();
+        Collections.shuffle(deck);
         initPiles();
         dealCards();
     }
@@ -106,7 +108,7 @@ public class Game extends Pane {
     }
 
     public void refillStockFromDiscard() {
-        //TODO
+        //TODO - if deck is empty ->refill
         System.out.println("Stock refilled from discard pile.");
     }
 
@@ -182,7 +184,11 @@ public class Game extends Pane {
 
     public void dealCards() {
         Iterator<Card> deckIterator = deck.iterator();
-        //TODO
+        /*TODO - Shuffle the pack
+          TODO - put the cards to the tableau (28pcs)
+          TODO - Turn upside the top cards
+        */
+
         deckIterator.forEachRemaining(card -> {
             stockPile.addCard(card);
             addMouseEventHandlers(card);
