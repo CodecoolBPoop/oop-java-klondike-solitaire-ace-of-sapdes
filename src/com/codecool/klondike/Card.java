@@ -80,7 +80,6 @@ public class Card extends ImageView {
     }
 
     public static boolean isOppositeColor(Card card1, Card card2) {
-        //TODO
         if (isCardColorRed(card1) != isCardColorRed(card2)) {
             return true;
         }
@@ -102,6 +101,7 @@ public class Card extends ImageView {
     }
 
     public static void loadCardImages() {
+        //TODO - rework to enum
         cardBackImage = new Image("card_images/card_back.png");
         String suitName = "";
         for (int suit = 1; suit < 5; suit++) {

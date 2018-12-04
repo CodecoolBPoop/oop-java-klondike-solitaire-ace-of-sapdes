@@ -79,7 +79,10 @@ public class Game extends Pane {
             return;
         Card card = (Card) e.getSource();
         Pile pile = getValidIntersectingPile(card, tableauPiles);
-        //TODO
+        // TODO - if pile !=null  --> card.getContainingPile --> store it
+        //TODO - if pile !=null  --> update card.containingPile to Pile
+        //TODO - if pile !=null --> sourcePile - remove topcard (which what we moved just now)
+        // TODO - stored sourcePile --> turn last card.flip()
         if (pile != null) {
             handleValidMove(card, pile);
         } else {
