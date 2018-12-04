@@ -2,6 +2,7 @@ package com.codecool.klondike;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
@@ -91,6 +92,21 @@ public class Game extends Pane {
         }
     };
 
+    private EventHandler<MouseEvent> refillTheStock = e -> {
+        ObservableList<Card> temp = discardPile.getCards();
+        Collections.reverse(temp);
+        for (Card card : temp) {
+            System.err.println(card);
+            stockPile.addCard(card);
+            card.flip();
+        }
+        discardPile.clear();
+        stockPile.setLayoutX(95);
+        stockPile.setLayoutY(20);
+        discardPile.setLayoutX(285);
+        discardPile.setLayoutY(20);
+    };
+
     public boolean isGameWon() {
         //TODO
         return false;
@@ -112,13 +128,20 @@ public class Game extends Pane {
 
     public void refillStockFromDiscard() {
         //TODO - if deck is empty ->refill
-        System.out.println("Stock refilled from discard pile.");
+        if (stockPile.isEmpty()) {
+            stockPile.setOnMouseClicked(refillTheStock);
+            System.out.println("Stock refilled from discard pile.");
+
+        }
     }
 
+
     public boolean isMoveValid(Card card, Pile destPile) {
-        //TODO
+        //TODO -> tableau - red to black and reverse and rank-1
+        //TODO -> foundation - same suit and rank+1
         return true;
     }
+
     private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
         Pile result = null;
         for (Pile pile : piles) {
@@ -187,12 +210,10 @@ public class Game extends Pane {
 
     public void dealCards() {
         Iterator<Card> deckIterator = deck.iterator();
-        /*TODO - Turn upside the top cards
-        */
         Card nextCard;
         for (int tableauNumber = 0; tableauNumber < 7; tableauNumber++) {
             Pile actualPile = tableauPiles.get(tableauNumber);
-            for (int cardNumber = 0; cardNumber < tableauNumber + 1 ; cardNumber++) {
+            for (int cardNumber = 0; cardNumber < tableauNumber + 1; cardNumber++) {
                 nextCard = deckIterator.next();
                 if (cardNumber == tableauNumber) {
                     nextCard.flip();
