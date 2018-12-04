@@ -67,6 +67,9 @@ public class Game extends Pane {
         System.out.println(draggedCards);
         draggedCards.clear();
         System.out.println(card);
+
+        //TODO - check if there are any flipped card below the picked card --> if yes, pick all of them
+
         draggedCards.add(card);
 
         card.getDropShadow().setRadius(20);
@@ -88,8 +91,11 @@ public class Game extends Pane {
             Pile sourcePile = card.getContainingPile();
             card.moveToPile(pile);
             Card sourceTopCard = sourcePile.getTopCard();
-            if (sourceTopCard != null && sourceTopCard.getContainingPile().getPileType().equals(Pile.PileType.TABLEAU)) {
-                sourceTopCard.flip();
+            if (sourceTopCard != null &&
+                    sourceTopCard.getContainingPile().getPileType().equals(Pile.PileType.TABLEAU)) {
+                if (sourceTopCard.isFaceDown()) {
+                    sourceTopCard.flip();
+                }
             }
 
             handleValidMove(card, pile);
@@ -145,10 +151,14 @@ public class Game extends Pane {
 
     public boolean isMoveValid(Card card, Pile destPile) {
         if (destPile.getPileType().equals(Pile.PileType.TABLEAU)) {
-            Card destCard = destPile.getTopCard();
-            if (destCard.isCardColorRed() != card.isCardColorRed() &&
-                    destCard.getRank() == card.getRank() + 1) {
-                return true;
+            if (destPile.isEmpty()) {
+                return card.getRank() == 13;
+            } else {
+                Card destCard = destPile.getTopCard();
+                if (destCard.isCardColorRed() != card.isCardColorRed() &&
+                        destCard.getRank() == card.getRank() + 1) {
+                    return true;
+                }
             }
         } else if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)) {
             if (destPile.getTopCard() == null && card.getRank() == 1 && card.getSuit() == destPile.getName()) {
@@ -261,5 +271,6 @@ public class Game extends Pane {
                 BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
                 BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
     }
+
 
 }
