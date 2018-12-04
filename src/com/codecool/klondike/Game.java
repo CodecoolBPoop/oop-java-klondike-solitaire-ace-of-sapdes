@@ -45,6 +45,7 @@ public class Game extends Pane {
             card.setMouseTransparent(false);
             System.out.println("Placed " + card + " to the waste.");
         }
+
     };
 
     private EventHandler<MouseEvent> stockReverseCardsHandler = e -> {
@@ -59,12 +60,15 @@ public class Game extends Pane {
     private EventHandler<MouseEvent> onMouseDraggedHandler = e -> {
         Card card = (Card) e.getSource();
         Pile activePile = card.getContainingPile();
+        if (activePile.getPileType() == Pile.PileType.DISCARD &&
+                card.equals(stockPile.getTopCard())) {
+            //TODO Why cN WE DRAG CARDS FROM DISCARD????
+        }
         if (activePile.getPileType() == Pile.PileType.STOCK)
             return;
         double offsetX = e.getSceneX() - dragStartX;
         double offsetY = e.getSceneY() - dragStartY;
 
-        System.out.println(draggedCards);
         draggedCards.clear();
         System.out.println(card);
 
