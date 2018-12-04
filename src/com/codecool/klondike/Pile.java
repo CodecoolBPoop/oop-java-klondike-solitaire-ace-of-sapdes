@@ -14,20 +14,21 @@ import java.util.ListIterator;
 public class Pile extends Pane {
 
     private PileType pileType;
-    private String name;
+    private int name;
     private double cardGap;
     private ObservableList<Card> cards = FXCollections.observableArrayList();
 
-    public Pile(PileType pileType, String name, double cardGap) {
+    public Pile(PileType pileType, int name, double cardGap) {
         this.pileType = pileType;
         this.cardGap = cardGap;
+        this.name = name;
     }
 
     public PileType getPileType() {
         return pileType;
     }
 
-    public String getName() {
+    public int getName() {
         return name;
     }
 

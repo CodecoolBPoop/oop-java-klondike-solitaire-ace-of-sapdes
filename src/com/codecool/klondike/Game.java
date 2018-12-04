@@ -38,7 +38,8 @@ public class Game extends Pane {
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
         Card card = (Card) e.getSource();
-        if (card.getContainingPile().getPileType() == Pile.PileType.STOCK) {
+        if (card.getContainingPile().getPileType() == Pile.PileType.STOCK &&
+                card.equals(stockPile.getTopCard())) {
             card.moveToPile(discardPile);
             card.flip();
             card.setMouseTransparent(false);
@@ -63,7 +64,9 @@ public class Game extends Pane {
         double offsetX = e.getSceneX() - dragStartX;
         double offsetY = e.getSceneY() - dragStartY;
 
+        System.out.println(draggedCards);
         draggedCards.clear();
+        System.out.println(card);
         draggedCards.add(card);
 
         card.getDropShadow().setRadius(20);
@@ -76,19 +79,25 @@ public class Game extends Pane {
     };
 
     private EventHandler<MouseEvent> onMouseReleasedHandler = e -> {
-        if (draggedCards.isEmpty())
+        if (draggedCards.isEmpty()) {
             return;
+        }
         Card card = (Card) e.getSource();
         Pile pile = getValidIntersectingPile(card, tableauPiles);
-        // TODO - if pile !=null  --> card.getContainingPile --> store it
-        //TODO - if pile !=null  --> update card.containingPile to Pile
-        //TODO - if pile !=null --> sourcePile - remove topcard (which what we moved just now)
-        // TODO - stored sourcePile --> turn last card.flip()
         if (pile != null) {
+            Pile sourcePile = card.getContainingPile();
+            card.moveToPile(pile);
+            Card sourceTopCard = sourcePile.getTopCard();
+            if (sourceTopCard != null && sourceTopCard.getContainingPile().getPileType().equals(Pile.PileType.TABLEAU)) {
+                sourceTopCard.flip();
+            }
+
             handleValidMove(card, pile);
+
+
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
-            draggedCards = null;
+            draggedCards.clear();
         }
     };
 
@@ -96,7 +105,6 @@ public class Game extends Pane {
         ObservableList<Card> temp = discardPile.getCards();
         Collections.reverse(temp);
         for (Card card : temp) {
-            System.err.println(card);
             stockPile.addCard(card);
             card.flip();
         }
@@ -136,9 +144,25 @@ public class Game extends Pane {
 
 
     public boolean isMoveValid(Card card, Pile destPile) {
-        //TODO -> tableau - red to black and reverse and rank-1
-        //TODO -> foundation - same suit and rank+1
-        return true;
+        if (destPile.getPileType().equals(Pile.PileType.TABLEAU)) {
+            Card destCard = destPile.getTopCard();
+            if (destCard.isCardColorRed() != card.isCardColorRed() &&
+                    destCard.getRank() == card.getRank() + 1) {
+                return true;
+            }
+        } else if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)) {
+            if (destPile.getTopCard() == null && card.getRank() == 1 && card.getSuit() == destPile.getName()) {
+                return true;
+            } else {
+                Card destCard = destPile.getTopCard();
+                if (destCard.getSuit() == card.getSuit() &&
+                        destCard.getRank() == card.getRank() - 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+
     }
 
     private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
@@ -176,29 +200,29 @@ public class Game extends Pane {
 
 
     private void initPiles() {
-        stockPile = new Pile(Pile.PileType.STOCK, "Stock", STOCK_GAP);
+        stockPile = new Pile(Pile.PileType.STOCK, 101, STOCK_GAP);
         stockPile.setBlurredBackground();
         stockPile.setLayoutX(95);
         stockPile.setLayoutY(20);
         stockPile.setOnMouseClicked(stockReverseCardsHandler);
         getChildren().add(stockPile);
 
-        discardPile = new Pile(Pile.PileType.DISCARD, "Discard", STOCK_GAP);
+        discardPile = new Pile(Pile.PileType.DISCARD, 100, STOCK_GAP);
         discardPile.setBlurredBackground();
         discardPile.setLayoutX(285);
         discardPile.setLayoutY(20);
         getChildren().add(discardPile);
 
-        for (int i = 0; i < 4; i++) {
-            Pile foundationPile = new Pile(Pile.PileType.FOUNDATION, "Foundation " + i, FOUNDATION_GAP);
+        for (int i = 1; i < 5; i++) {
+            Pile foundationPile = new Pile(Pile.PileType.FOUNDATION, i, FOUNDATION_GAP);
             foundationPile.setBlurredBackground();
-            foundationPile.setLayoutX(610 + i * 180);
+            foundationPile.setLayoutX(610 + (i - 1) * 180);
             foundationPile.setLayoutY(20);
             foundationPiles.add(foundationPile);
             getChildren().add(foundationPile);
         }
         for (int i = 0; i < 7; i++) {
-            Pile tableauPile = new Pile(Pile.PileType.TABLEAU, "Tableau " + i, TABLEAU_GAP);
+            Pile tableauPile = new Pile(Pile.PileType.TABLEAU, i, TABLEAU_GAP);
             tableauPile.setBlurredBackground();
             tableauPile.setLayoutX(95 + i * 180);
             tableauPile.setLayoutY(275);
