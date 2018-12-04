@@ -127,7 +127,6 @@ public class Game extends Pane {
     }
 
     public void refillStockFromDiscard() {
-        //TODO - if deck is empty ->refill
         if (stockPile.isEmpty()) {
             stockPile.setOnMouseClicked(refillTheStock);
             System.out.println("Stock refilled from discard pile.");
