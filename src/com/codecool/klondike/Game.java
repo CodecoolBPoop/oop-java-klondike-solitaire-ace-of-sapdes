@@ -14,6 +14,8 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -116,6 +118,10 @@ public class Game extends Pane {
                 }
             }
             handleValidMove(card, pile);
+            if (isGameWon()) {
+                JOptionPane.showMessageDialog(null,"Congratulations, you won !!!");
+                System.exit(0);
+            }
 
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
@@ -142,7 +148,7 @@ public class Game extends Pane {
         for (int i = 0; i < 4; i++) {
             sum += foundationPiles.get(i).numOfCards();
         }
-        return !(sum == 52);
+        return (sum == 52);
     }
 
     public Game() {
