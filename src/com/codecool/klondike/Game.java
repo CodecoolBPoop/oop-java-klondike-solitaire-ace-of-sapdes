@@ -94,15 +94,25 @@ public class Game extends Pane {
             return;
         }
         Card card = (Card) e.getSource();
-        Pile pile = getValidIntersectingPile(card, tableauPiles);
+        Pile pile = checkDestPile(card);
+
         if (pile != null) {
             Pile sourcePile = card.getContainingPile();
             card.moveToPile(pile);
             Card sourceTopCard = sourcePile.getTopCard();
-            if (sourceTopCard != null &&
-                    sourceTopCard.getContainingPile().getPileType().equals(Pile.PileType.TABLEAU)) {
-                if (sourceTopCard.isFaceDown()) {
-                    sourceTopCard.flip();
+            if (pile.getPileType().equals(Pile.PileType.TABLEAU)) {
+                if (sourceTopCard != null &&
+                        sourceTopCard.getContainingPile().getPileType().equals(Pile.PileType.TABLEAU)) {
+                    if (sourceTopCard.isFaceDown()) {
+                        sourceTopCard.flip();
+                    }
+                }
+            }else if(pile.getPileType().equals(Pile.PileType.FOUNDATION)){
+                if (sourceTopCard != null &&
+                        sourceTopCard.getContainingPile().getPileType().equals(Pile.PileType.FOUNDATION)) {
+                    if (sourceTopCard.isFaceDown()) {
+                        sourceTopCard.flip();
+                    }
                 }
             }
             handleValidMove(card, pile);
@@ -279,4 +289,15 @@ public class Game extends Pane {
     }
 
 
+    private Pile checkDestPile(Card card) {
+        Pile pile = getValidIntersectingPile(card, foundationPiles);
+        if (pile != null) {
+            return pile;
+        }
+        pile = getValidIntersectingPile(card, tableauPiles);
+        if (pile != null) {
+            return pile;
+        }
+        return null;
+    }
 }
