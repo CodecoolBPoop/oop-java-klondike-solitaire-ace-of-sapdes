@@ -107,9 +107,9 @@ public class Game extends Pane {
                         sourceTopCard.flip();
                     }
                 }
-            }else if(pile.getPileType().equals(Pile.PileType.FOUNDATION)){
+            } else if (pile.getPileType().equals(Pile.PileType.FOUNDATION)) {
                 if (sourceTopCard != null &&
-                        sourceTopCard.getContainingPile().getPileType().equals(Pile.PileType.FOUNDATION)) {
+                        sourceTopCard.getContainingPile().getPileType().equals(Pile.PileType.TABLEAU)) {
                     if (sourceTopCard.isFaceDown()) {
                         sourceTopCard.flip();
                     }
@@ -138,8 +138,11 @@ public class Game extends Pane {
     };
 
     public boolean isGameWon() {
-        //TODO
-        return false;
+        int sum = 0;
+        for (int i = 0; i < 4; i++) {
+            sum += foundationPiles.get(i).numOfCards();
+        }
+        return !(sum == 52);
     }
 
     public Game() {
@@ -177,8 +180,12 @@ public class Game extends Pane {
                 }
             }
         } else if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)) {
-            if (destPile.getTopCard() == null && card.getRank() == 1 && card.getSuit() == destPile.getName()) {
-                return true;
+            if (destPile.getTopCard() == null) {
+                if (card.getRank() == 1 && card.getSuit() == destPile.getName()) {
+                    return true;
+                }
+                return false;
+
             } else {
                 Card destCard = destPile.getTopCard();
                 if (destCard.getSuit() == card.getSuit() &&
