@@ -16,13 +16,13 @@ import javafx.scene.layout.Pane;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 
 public class Game extends Pane {
 
+    public static final int TOTAL_NUMBER_OF_CARDS = 52;
+    public static final int NUMBER_OF_FOUNDATION_PILES = 4;
     private List<Card> deck = new ArrayList<>();
 
     private Pile stockPile;
@@ -72,15 +72,34 @@ public class Game extends Pane {
         }
         if (activePile.getPileType() == Pile.PileType.STOCK)
             return;
+
+        draggedCards.clear();
+
+        //TODO - check if there are any flipped card below the picked card --> if yes, pick all of them
+        if (!card.equals(activePile.getTopCard())) {
+            boolean matchedCard = false;
+            for (Card currentCard: activePile.getCards()) {
+                if (!matchedCard) {
+                    if (currentCard.equals(card)) {
+                        matchedCard = true;
+                        draggedCards.add(currentCard);
+                    }
+                } else {
+                    draggedCards.add(currentCard);
+                }
+            }
+        } else {
+            draggedCards.add(card);
+        }
+
+        for (Card dCard: draggedCards
+             ) {
+
+        }
+
         double offsetX = e.getSceneX() - dragStartX;
         double offsetY = e.getSceneY() - dragStartY;
 
-        draggedCards.clear();
-        System.out.println(card);
-
-        //TODO - check if there are any flipped card below the picked card --> if yes, pick all of them
-
-        draggedCards.add(card);
 
         card.getDropShadow().setRadius(20);
         card.getDropShadow().setOffsetX(10);
@@ -97,9 +116,9 @@ public class Game extends Pane {
         }
         Card card = (Card) e.getSource();
         Pile pile = checkDestPile(card);
+        Pile sourcePile = card.getContainingPile();
 
         if (pile != null) {
-            Pile sourcePile = card.getContainingPile();
             card.moveToPile(pile);
             Card sourceTopCard = sourcePile.getTopCard();
             if (pile.getPileType().equals(Pile.PileType.TABLEAU)) {
@@ -124,7 +143,9 @@ public class Game extends Pane {
             }
 
         } else {
+            System.out.println(sourcePile.getCards());
             draggedCards.forEach(MouseUtil::slideBack);
+            System.out.println(card.getContainingPile().getCards());
             draggedCards.clear();
         }
     };
@@ -145,10 +166,10 @@ public class Game extends Pane {
 
     public boolean isGameWon() {
         int sum = 0;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < NUMBER_OF_FOUNDATION_PILES; i++) {
             sum += foundationPiles.get(i).numOfCards();
         }
-        return (sum == 52);
+        return (sum == TOTAL_NUMBER_OF_CARDS);
     }
 
     public Game() {

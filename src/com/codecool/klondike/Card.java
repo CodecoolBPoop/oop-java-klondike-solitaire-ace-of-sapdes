@@ -9,6 +9,9 @@ import java.util.*;
 
 public class Card extends ImageView {
 
+    private double coordX;
+    private double coordY;
+
     private int suit;
     private int rank;
     private boolean faceDown;
@@ -34,6 +37,22 @@ public class Card extends ImageView {
         frontFace = cardFaceImages.get(getShortName());
         setImage(faceDown ? backFace : frontFace);
         setEffect(dropShadow);
+    }
+
+    public double getCoordX() {
+        return coordX;
+    }
+
+    public double getCoordY() {
+        return coordY;
+    }
+
+    public void setCoordX(double coordX) {
+        this.coordX = coordX;
+    }
+
+    public void setCoordY(double coordY) {
+        this.coordY = coordY;
     }
 
     public int getSuit() {
