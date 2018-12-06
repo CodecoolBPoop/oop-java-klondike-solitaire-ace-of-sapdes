@@ -29,8 +29,6 @@ public class MouseUtil {
                     card.getDropShadow().setOffsetX(0);
                     card.getDropShadow().setOffsetY(0);
                 });
-        System.out.println("source: " + sourceY);
-        System.out.println("target: " + targetY);
     }
 
     public static void slideToDest(List<Card> cardsToSlide, Pile destPile) {

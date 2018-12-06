@@ -78,7 +78,7 @@ public class Game extends Pane {
         //TODO - check if there are any flipped card below the picked card --> if yes, pick all of them
         if (!card.equals(activePile.getTopCard())) {
             boolean matchedCard = false;
-            for (Card currentCard: activePile.getCards()) {
+            for (Card currentCard : activePile.getCards()) {
                 if (!matchedCard) {
                     if (currentCard.equals(card)) {
                         matchedCard = true;
@@ -91,7 +91,6 @@ public class Game extends Pane {
         } else {
             draggedCards.add(card);
         }
-
 
 
         double offsetX = e.getSceneX() - dragStartX;
@@ -116,14 +115,27 @@ public class Game extends Pane {
         Pile sourcePile = card.getContainingPile();
 
         if (pile != null) {
-            card.moveToPile(pile);
-            Card topFaceDown;
-            for (Card remainingCard: sourcePile.getCards()
-                 ) {
-                if (remainingCard.isFaceDown()) {
 
+
+            ListIterator<Card> iter = sourcePile.getCards().listIterator();
+            Card cc;
+            boolean iterCont = true;
+            while (iter.hasNext() && iterCont) {
+                cc = iter.next();
+                if (cc.equals(card)) {
+                    cc = iter.previous();
+                    if(iter.hasPrevious())cc=iter.previous();
+                    if (cc.isFaceDown()) {
+                        cc.flip();
+                        iter.next();
+                        iterCont = false;
+                    } else {
+                        iterCont = false;
+                    }
                 }
             }
+
+            card.moveToPile(pile);
             Card sourceTopCard = sourcePile.getTopCard();
             if (pile.getPileType().equals(Pile.PileType.TABLEAU)) {
                 if (sourceTopCard != null &&
@@ -142,16 +154,15 @@ public class Game extends Pane {
             }
             handleValidMove(card, pile);
             if (isGameWon()) {
-                JOptionPane.showMessageDialog(null,"Congratulations, you won !!!");
+                JOptionPane.showMessageDialog(null, "Congratulations, you won !!!");
                 System.exit(0);
             }
 
         } else {
             System.out.println(sourcePile.getCards());
-//            draggedCards.forEach(MouseUtil::slideBack);
             MouseUtil.slideBack(card);
-            for (Card cCard: draggedCards
-                 ) {
+            for (Card cCard : draggedCards
+            ) {
                 cCard.toFront();
             }
             System.out.println(card.getContainingPile().getCards());
