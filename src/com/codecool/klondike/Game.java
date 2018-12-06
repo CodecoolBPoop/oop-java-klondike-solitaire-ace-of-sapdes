@@ -82,10 +82,12 @@ public class Game extends Pane {
         refillStockFromDiscard();
     };
 
+
     private EventHandler<MouseEvent> onMousePressedHandler = e -> {
         dragStartX = e.getSceneX();
         dragStartY = e.getSceneY();
     };
+
 
     private EventHandler<MouseEvent> onMouseDraggedHandler = e -> {
         Card card = (Card) e.getSource();
@@ -93,16 +95,14 @@ public class Game extends Pane {
         if (activePile.getPileType() == Pile.PileType.TABLEAU && card.isFaceDown()) {
             return;
         }
-        if (activePile.getPileType() == Pile.PileType.DISCARD &&
+        else if (activePile.getPileType() == Pile.PileType.DISCARD &&
                 !card.equals(discardPile.getTopCard())) {
             return;
-
         }
-        if (activePile.getPileType() == Pile.PileType.STOCK)
+        else if (activePile.getPileType() == Pile.PileType.STOCK){
             return;
-
+        }
         draggedCards.clear();
-
         if (!card.equals(activePile.getTopCard())) {
             boolean matchedCard = false;
             for (Card currentCard : activePile.getCards()) {
@@ -142,8 +142,6 @@ public class Game extends Pane {
         Pile sourcePile = card.getContainingPile();
 
         if (pile != null) {
-
-
             ListIterator<Card> iter = sourcePile.getCards().listIterator();
             Card cc;
             boolean iterCont = true;
@@ -161,7 +159,6 @@ public class Game extends Pane {
                     }
                 }
             }
-
             card.moveToPile(pile);
             Card sourceTopCard = sourcePile.getTopCard();
             if (pile.getPileType().equals(Pile.PileType.TABLEAU)) {
@@ -184,16 +181,15 @@ public class Game extends Pane {
                 JOptionPane.showMessageDialog(null, "Congratulations, you won !!!");
                 System.exit(0);
             }
-
         } else {
             MouseUtil.slideBack(card);
-            for (Card cCard : draggedCards
-            ) {
+            for (Card cCard : draggedCards) {
                 cCard.toFront();
             }
             draggedCards.clear();
         }
     };
+
 
     private void refillTheStock() {
         ObservableList<Card> temp = discardPile.getCards();
@@ -209,7 +205,6 @@ public class Game extends Pane {
         discardPile.setLayoutY(20);
     }
 
-    ;
 
     public boolean isGameWon() {
         int sum = 0;
@@ -219,12 +214,14 @@ public class Game extends Pane {
         return (sum == TOTAL_NUMBER_OF_CARDS);
     }
 
+
     public Game() {
         deck = Card.createNewDeck();
         Collections.shuffle(deck);
         initPiles();
         dealCards();
     }
+
 
     public void addMouseEventHandlers(Card card) {
         card.setOnMousePressed(onMousePressedHandler);
@@ -233,11 +230,11 @@ public class Game extends Pane {
         card.setOnMouseClicked(onMouseClickedHandler);
     }
 
+
     public void refillStockFromDiscard() {
         if (stockPile.isEmpty()) {
             refillTheStock();
             System.out.println("Stock refilled from discard pile.");
-
         }
     }
 
@@ -269,8 +266,8 @@ public class Game extends Pane {
             }
         }
         return false;
-
     }
+
 
     private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
         Pile result = null;
@@ -283,12 +280,14 @@ public class Game extends Pane {
         return result;
     }
 
+
     private boolean isOverPile(Card card, Pile pile) {
         if (pile.isEmpty())
             return card.getBoundsInParent().intersects(pile.getBoundsInParent());
         else
             return card.getBoundsInParent().intersects(pile.getTopCard().getBoundsInParent());
     }
+
 
     private void handleValidMove(Card card, Pile destPile) {
         String msg = null;
@@ -338,6 +337,7 @@ public class Game extends Pane {
         }
     }
 
+
     public void dealCards() {
         Iterator<Card> deckIterator = deck.iterator();
         Card nextCard;
@@ -354,14 +354,13 @@ public class Game extends Pane {
             }
         }
 
-
         deckIterator.forEachRemaining(card -> {
             stockPile.addCard(card);
             addMouseEventHandlers(card);
             getChildren().add(card);
         });
-
     }
+
 
     public void setTableBackground(Image tableBackground) {
         setBackground(new Background(new BackgroundImage(tableBackground,
