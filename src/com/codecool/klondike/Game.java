@@ -54,13 +54,18 @@ public class Game extends Pane {
             if (sendCardToFoundation(card)) {
                 Pile sourcePile = card.getContainingPile();
                 card.moveToPile(destPile);
-                if (sourcePile.getPileType() == Pile.PileType.TABLEAU &&
-                        sourcePile.getTopCard().isFaceDown()) {
-                    sourcePile.getTopCard().flip();
+                if (!sourcePile.isEmpty()) {
+                    if (sourcePile.getPileType() == Pile.PileType.TABLEAU && sourcePile.getTopCard().isFaceDown()) {
+                        sourcePile.getTopCard().flip();
+                    }
                 }
             }
-
+            if (isGameWon()) {
+                JOptionPane.showMessageDialog(null, "Congratulations, you won !!!");
+                System.exit(0);
+            }
         }
+
     };
 
     private boolean sendCardToFoundation(Card card) {
@@ -92,12 +97,10 @@ public class Game extends Pane {
         Pile activePile = card.getContainingPile();
         if (activePile.getPileType() == Pile.PileType.TABLEAU && card.isFaceDown()) {
             return;
-        }
-        else if (activePile.getPileType() == Pile.PileType.DISCARD &&
+        } else if (activePile.getPileType() == Pile.PileType.DISCARD &&
                 !card.equals(discardPile.getTopCard())) {
             return;
-        }
-        else if (activePile.getPileType() == Pile.PileType.STOCK){
+        } else if (activePile.getPileType() == Pile.PileType.STOCK) {
             return;
         }
         draggedCards.clear();
