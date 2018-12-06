@@ -92,10 +92,7 @@ public class Game extends Pane {
             draggedCards.add(card);
         }
 
-        for (Card dCard: draggedCards
-             ) {
 
-        }
 
         double offsetX = e.getSceneX() - dragStartX;
         double offsetY = e.getSceneY() - dragStartY;
@@ -120,6 +117,13 @@ public class Game extends Pane {
 
         if (pile != null) {
             card.moveToPile(pile);
+            Card topFaceDown;
+            for (Card remainingCard: sourcePile.getCards()
+                 ) {
+                if (remainingCard.isFaceDown()) {
+
+                }
+            }
             Card sourceTopCard = sourcePile.getTopCard();
             if (pile.getPileType().equals(Pile.PileType.TABLEAU)) {
                 if (sourceTopCard != null &&
@@ -144,7 +148,12 @@ public class Game extends Pane {
 
         } else {
             System.out.println(sourcePile.getCards());
-            draggedCards.forEach(MouseUtil::slideBack);
+//            draggedCards.forEach(MouseUtil::slideBack);
+            MouseUtil.slideBack(card);
+            for (Card cCard: draggedCards
+                 ) {
+                cCard.toFront();
+            }
             System.out.println(card.getContainingPile().getCards());
             draggedCards.clear();
         }
