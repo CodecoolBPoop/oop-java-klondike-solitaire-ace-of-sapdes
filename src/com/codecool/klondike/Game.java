@@ -75,7 +75,6 @@ public class Game extends Pane {
 
         draggedCards.clear();
 
-        //TODO - check if there are any flipped card below the picked card --> if yes, pick all of them
         if (!card.equals(activePile.getTopCard())) {
             boolean matchedCard = false;
             for (Card currentCard : activePile.getCards()) {
@@ -124,7 +123,7 @@ public class Game extends Pane {
                 cc = iter.next();
                 if (cc.equals(card)) {
                     cc = iter.previous();
-                    if(iter.hasPrevious())cc=iter.previous();
+                    if (iter.hasPrevious()) cc = iter.previous();
                     if (cc.isFaceDown()) {
                         cc.flip();
                         iter.next();
@@ -159,18 +158,16 @@ public class Game extends Pane {
             }
 
         } else {
-            System.out.println(sourcePile.getCards());
             MouseUtil.slideBack(card);
             for (Card cCard : draggedCards
             ) {
                 cCard.toFront();
             }
-            System.out.println(card.getContainingPile().getCards());
             draggedCards.clear();
         }
     };
 
-    private EventHandler<MouseEvent> refillTheStock = e -> {
+    private void refillTheStock() {
         ObservableList<Card> temp = discardPile.getCards();
         Collections.reverse(temp);
         for (Card card : temp) {
@@ -182,7 +179,9 @@ public class Game extends Pane {
         stockPile.setLayoutY(20);
         discardPile.setLayoutX(285);
         discardPile.setLayoutY(20);
-    };
+    }
+
+    ;
 
     public boolean isGameWon() {
         int sum = 0;
@@ -208,7 +207,7 @@ public class Game extends Pane {
 
     public void refillStockFromDiscard() {
         if (stockPile.isEmpty()) {
-            stockPile.setOnMouseClicked(refillTheStock);
+            refillTheStock();
             System.out.println("Stock refilled from discard pile.");
 
         }
