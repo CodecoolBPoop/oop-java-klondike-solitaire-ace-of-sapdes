@@ -102,6 +102,7 @@ public class Card extends ImageView {
         return card1.isCardColorRed() != card2.isCardColorRed();
     }
 
+
     public static boolean isSameSuit(Card card1, Card card2) {
         return card1.getSuit() == card2.getSuit();
     }
@@ -115,6 +116,7 @@ public class Card extends ImageView {
         }
         return result;
     }
+
 
     public static void loadCardImages() {
         //TODO - rework to enum

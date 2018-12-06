@@ -5,6 +5,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -15,7 +16,6 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -23,8 +23,8 @@ public class Game extends Pane {
 
     public static final int TOTAL_NUMBER_OF_CARDS = 52;
     public static final int NUMBER_OF_FOUNDATION_PILES = 4;
-    private List<Card> deck = new ArrayList<>();
-
+    private List<Card> deck;
+    private List<Card> shuffledDeck = new ArrayList<Card>();
     private Pile stockPile;
     private Pile discardPile;
     private List<Pile> foundationPiles = FXCollections.observableArrayList();
@@ -216,9 +216,35 @@ public class Game extends Pane {
     public Game() {
         deck = Card.createNewDeck();
         Collections.shuffle(deck);
+        for (int i = 0; i < deck.size(); i++) {
+            Card tempCard = new Card(deck.get(i).getSuit(), deck.get(i).getRank(), true);
+            shuffledDeck.add(tempCard);
+        }
         initPiles();
         dealCards();
+        createButton();
     }
+
+    private void createButton() {
+        Button btn = new Button("Restart");
+        btn.defaultButtonProperty();
+        btn.setOnMouseClicked((mouseEvent) -> {
+            getChildren().clear();
+            restartedGame();
+        });
+        getChildren().add(btn);
+    }
+
+    public void restartedGame() {
+        tableauPiles.clear();
+        foundationPiles.clear();
+        deck.clear();
+        deck = shuffledDeck;
+        initPiles();
+        dealCards();
+        createButton();
+    }
+
 
     public void addMouseEventHandlers(Card card) {
         card.setOnMousePressed(onMousePressedHandler);
@@ -371,4 +397,6 @@ public class Game extends Pane {
         }
         return null;
     }
+
+
 }
