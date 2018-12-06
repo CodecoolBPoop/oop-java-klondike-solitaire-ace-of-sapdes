@@ -40,15 +40,43 @@ public class Game extends Pane {
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
         Card card = (Card) e.getSource();
-        if (card.getContainingPile().getPileType() == Pile.PileType.STOCK &&
-                card.equals(stockPile.getTopCard())) {
-            card.moveToPile(discardPile);
-            card.flip();
-            card.setMouseTransparent(false);
-            System.out.println("Placed " + card + " to the waste.");
-        }
+        int suitOfCard = card.getSuit();
+        Pile destPile = foundationPiles.get(suitOfCard - 1);
+        if (e.getClickCount() == 1) {
+            if (card.getContainingPile().getPileType() == Pile.PileType.STOCK &&
+                    card.equals(stockPile.getTopCard())) {
+                card.moveToPile(discardPile);
+                card.flip();
+                card.setMouseTransparent(false);
+                System.out.println("Placed " + card + " to the waste.");
+            }
+        } else if (e.getClickCount() == 2) {
+            if (sendCardToFoundation(card)) {
+                Pile sourcePile = card.getContainingPile();
+                card.moveToPile(destPile);
+                if (sourcePile.getPileType() == Pile.PileType.TABLEAU &&
+                        sourcePile.getTopCard().isFaceDown()) {
+                    sourcePile.getTopCard().flip();
+                }
+            }
 
+        }
     };
+
+    private boolean sendCardToFoundation(Card card) {
+        int suitOfCard = card.getSuit();
+        int rankOfCard = card.getRank();
+        Pile destPile = foundationPiles.get(suitOfCard - 1);
+        if (rankOfCard == 1) {
+            return true;
+        } else {
+            if (!destPile.isEmpty() && destPile.getTopCard().getRank() == rankOfCard - 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private EventHandler<MouseEvent> stockReverseCardsHandler = e -> {
         refillStockFromDiscard();
