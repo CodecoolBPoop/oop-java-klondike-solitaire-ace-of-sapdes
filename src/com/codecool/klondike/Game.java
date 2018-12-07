@@ -1,10 +1,8 @@
 package com.codecool.klondike;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -222,27 +220,31 @@ public class Game extends Pane {
         }
         initPiles();
         dealCards();
-        createButton();
+        createButtons();
     }
 
-    private void createButton() {
-        Button btn = new Button("Restart");
-        btn.defaultButtonProperty();
-        btn.setOnMouseClicked((mouseEvent) -> {
+    private void createButtons() {
+        Button restartBtn = new Button("Restart");
+        restartBtn.defaultButtonProperty();
+        restartBtn.setOnMouseClicked((mouseEvent) -> {
             getChildren().clear();
             restartedGame();
         });
-        getChildren().add(btn);
+        getChildren().add(restartBtn);
     }
 
     public void restartedGame() {
         tableauPiles.clear();
         foundationPiles.clear();
         deck.clear();
-        deck = shuffledDeck;
+        for (int i = 0; i < shuffledDeck.size(); i++) {
+            Card tempCard = new Card(shuffledDeck.get(i).getSuit(), shuffledDeck.get(i).getRank(), true);
+            deck.add(tempCard);
+        }
+        //deck = shuffledDeck;
         initPiles();
         dealCards();
-        createButton();
+        createButtons();
     }
 
 
