@@ -51,10 +51,12 @@ public class Game extends Pane {
         } else if (e.getClickCount() == 2) {
             if (sendCardToFoundation(card)) {
                 Pile sourcePile = card.getContainingPile();
-                card.moveToPile(destPile);
-                if (!sourcePile.isEmpty()) {
-                    if (sourcePile.getPileType() == Pile.PileType.TABLEAU && sourcePile.getTopCard().isFaceDown()) {
-                        sourcePile.getTopCard().flip();
+                if (sourcePile.getTopCard().equals(card)) {
+                    card.moveToPile(destPile);
+                    if (!sourcePile.isEmpty()) {
+                        if (sourcePile.getPileType() == Pile.PileType.TABLEAU && sourcePile.getTopCard().isFaceDown()) {
+                            sourcePile.getTopCard().flip();
+                        }
                     }
                 }
             }
@@ -274,7 +276,7 @@ public class Game extends Pane {
                     return true;
                 }
             }
-        } else if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)) {
+        } else if (draggedCards.size() == 1 && destPile.getPileType().equals(Pile.PileType.FOUNDATION)) {
             if (destPile.getTopCard() == null) {
                 if (card.getRank() == 1 && card.getSuit() == destPile.getName()) {
                     return true;
